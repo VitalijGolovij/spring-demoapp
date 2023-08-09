@@ -32,16 +32,17 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String headerToken = request.getHeader("Authorization");
 
-        if (!headerToken.isBlank()) {
-            String tokenWithoutBearer = extractTokenFromHeader(headerToken);
+        if (isValidToken(headerToken)) {
+            if (!headerToken.isBlank()) {
+                String tokenWithoutBearer = extractTokenFromHeader(headerToken);
 
-            if (tokenWithoutBearer.isBlank()) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
-            } else {
-                handleValidToken(tokenWithoutBearer, response);
+                if (tokenWithoutBearer.isBlank()) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
+                } else {
+                    handleValidToken(tokenWithoutBearer, response);
+                }
             }
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -71,5 +72,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 userDetails.getPassword(),
                 userDetails.getAuthorities()
         );
+    }
+
+    private boolean isValidToken(String token){
+        return token != null && !token.isBlank() && token.startsWith("Bearer ");
     }
 }

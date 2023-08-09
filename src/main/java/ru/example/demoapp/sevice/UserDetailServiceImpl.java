@@ -30,4 +30,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
             );
         return new UserDetailsImpl(user.get());
     }
+
+    public boolean isUsernameAvailable(String username){
+        return userRepository.findByUsername(username).isEmpty();
+    }
 }

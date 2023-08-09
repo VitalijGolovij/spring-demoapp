@@ -20,7 +20,7 @@ public class JWTUtil {
     @Value("${jwt.minutesLifeTime}")
     private Integer minutesLifeTime;
 
-    public String generateToken(String username, String email){
+    public String generateToken(String username){
         return JWT.create()
                 .withSubject("UserDetails")
                 .withClaim("username", username)
