@@ -1,17 +1,15 @@
 package ru.example.demoapp.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 import ru.example.demoapp.model.User;
 
 import java.util.Collection;
 
 
-public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+public class UserDetailsImpl implements org.springframework.security.core.userdetails.UserDetails {
     private final User user;
 
-    public UserDetails(User user){
+    public UserDetailsImpl(User user){
         this.user = user;
     }
 
