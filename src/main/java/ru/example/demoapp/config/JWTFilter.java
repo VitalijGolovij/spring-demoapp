@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.example.demoapp.security.UserDetailsImpl;
 import ru.example.demoapp.sevice.UserDetailServiceImpl;
 import ru.example.demoapp.util.JWTUtil;
 

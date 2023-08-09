@@ -6,10 +6,10 @@ import ru.example.demoapp.model.User;
 import java.util.Collection;
 
 
-public class UserDetailsImpl implements org.springframework.security.core.userdetails.UserDetails {
+public class UserDetailsDto implements org.springframework.security.core.userdetails.UserDetails {
     private final User user;
 
-    public UserDetailsImpl(User user){
+    public UserDetailsDto(User user){
         this.user = user;
     }
 

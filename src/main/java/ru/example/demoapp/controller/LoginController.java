@@ -1,13 +1,12 @@
 package ru.example.demoapp.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.example.demoapp.dto.LoginUserDTO;
+import ru.example.demoapp.dto.LoginUserDto;
 import ru.example.demoapp.util.JWTUtil;
 
 import java.util.Map;
@@ -26,18 +25,18 @@ public class LoginController {
 
 
     @PostMapping("")
-    public Map<String, String> login(@RequestBody LoginUserDTO loginUserDTO,
+    public Map<String, String> login(@RequestBody LoginUserDto loginUserDto,
                                      BindingResult bindingResult){
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(loginUserDTO.getUsername(),
-                        loginUserDTO.getPassword());
+                new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(),
+                        loginUserDto.getPassword());
         try {
             authenticationManager.authenticate(token);
         } catch (BadCredentialsException e){
             return Map.of("message","wrong pass or login");
         }
 
-        String jwtToken = jwtUtil.generateToken(loginUserDTO.getUsername());
+        String jwtToken = jwtUtil.generateToken(loginUserDto.getUsername());
         return Map.of("jwtToken", jwtToken);
     }
 }

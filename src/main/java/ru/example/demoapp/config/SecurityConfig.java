@@ -51,7 +51,7 @@ public class SecurityConfig{
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/login","/register").permitAll()
-                .anyRequest().hasAnyRole("USER","ADMIN")
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.example.demoapp.dto.RegisterUserDTO;
+import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.sevice.UserDetailServiceImpl;
 
 import java.util.Objects;
@@ -25,7 +25,7 @@ public class RegisterUserDTOValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        RegisterUserDTO registerUserDTO = (RegisterUserDTO) target;
+        RegisterUserDto registerUserDTO = (RegisterUserDto) target;
 
         if (!userDetailService.isUsernameAvailable(registerUserDTO.getUsername())){
             errors.rejectValue("username","1",

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.example.demoapp.dto.RegisterUserDTO;
+import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.RegisterServiceImpl;
 import ru.example.demoapp.util.JWTUtil;
@@ -34,7 +34,7 @@ public class RegistrationController {
     }
 
     @PostMapping("")
-    public Map<String, String> registerUser(@RequestBody @Valid RegisterUserDTO registerUserDTO,
+    public Map<String, String> registerUser(@RequestBody @Valid RegisterUserDto registerUserDTO,
                                              BindingResult bindingResult){
         registerUserDTOValidator.validate(registerUserDTO, bindingResult);
 
@@ -50,7 +50,7 @@ public class RegistrationController {
         return Map.of("token", jwtToken);
     }
 
-    private User convertToUser(RegisterUserDTO registerUserDTO){
+    private User convertToUser(RegisterUserDto registerUserDTO){
         return modelMapper.map(registerUserDTO, User.class);
     }
 }
