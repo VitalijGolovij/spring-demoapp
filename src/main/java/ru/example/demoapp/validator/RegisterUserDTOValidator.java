@@ -4,18 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.example.demoapp.dto.UserDTO;
-import ru.example.demoapp.model.User;
+import ru.example.demoapp.dto.RegisterUserDTO;
 import ru.example.demoapp.sevice.UserDetailServiceImpl;
 
 import java.util.Objects;
 
 @Component
-public class UserDTOValidator implements Validator {
+public class RegisterUserDTOValidator implements Validator {
     private final UserDetailServiceImpl userDetailService;
 
     @Autowired
-    public UserDTOValidator(UserDetailServiceImpl userDetailService) {
+    public RegisterUserDTOValidator(UserDetailServiceImpl userDetailService) {
         this.userDetailService = userDetailService;
     }
 
@@ -26,14 +25,14 @@ public class UserDTOValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        UserDTO userDTO = (UserDTO) target;
+        RegisterUserDTO registerUserDTO = (RegisterUserDTO) target;
 
-        if (!userDetailService.isUsernameAvailable(userDTO.getUsername())){
+        if (!userDetailService.isUsernameAvailable(registerUserDTO.getUsername())){
             errors.rejectValue("username","1",
-                    String.format("name '%s' is already taken", userDTO.getUsername())
+                    String.format("name '%s' is already taken", registerUserDTO.getUsername())
             );
         }
-        if (!Objects.equals(userDTO.getPassword(), userDTO.getConfirmPassword())){
+        if (!Objects.equals(registerUserDTO.getPassword(), registerUserDTO.getConfirmPassword())){
             errors.rejectValue("passwordConfirm","2",
                     "incorrect password confirmation"
             );
