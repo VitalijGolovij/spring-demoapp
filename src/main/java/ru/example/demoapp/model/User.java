@@ -1,4 +1,4 @@
-package ru.example.demoapp.model.model;
+package ru.example.demoapp.model;
 
 import lombok.Data;
 
