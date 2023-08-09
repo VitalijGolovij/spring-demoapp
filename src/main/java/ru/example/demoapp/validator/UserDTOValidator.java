@@ -1,4 +1,4 @@
-package ru.example.demoapp.util;
+package ru.example.demoapp.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
