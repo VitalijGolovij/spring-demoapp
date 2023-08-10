@@ -21,6 +21,15 @@ public class User {
     @Size(min = 1, max = 30, message = "Username size should be greater than 1 and less than 30 characters")
     private String username;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "city")
+    private String city;
+
     @Email
     @Column(name = "email")
     private String email;
