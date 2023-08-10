@@ -1,4 +1,4 @@
-package ru.example.demoapp.validator;
+package ru.example.demoapp.util.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

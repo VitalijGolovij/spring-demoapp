@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.example.demoapp.convertor.DtoConvertor;
+import ru.example.demoapp.util.convertor.DtoConvertor;
 import ru.example.demoapp.dto.LoginUserDto;
 import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.RegisterServiceImpl;
 import ru.example.demoapp.util.*;
-import ru.example.demoapp.validator.RegisterUserDTOValidator;
+import ru.example.demoapp.util.validator.RegisterUserDTOValidator;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("")

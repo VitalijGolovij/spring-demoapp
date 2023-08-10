@@ -1,4 +1,4 @@
-package ru.example.demoapp.exception;
+package ru.example.demoapp.util.exception;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException(){

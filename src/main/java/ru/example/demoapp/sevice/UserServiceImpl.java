@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.example.demoapp.dto.UserInfoDto;
-import ru.example.demoapp.exception.UserNotFoundException;
+import ru.example.demoapp.util.exception.UserNotFoundException;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.repository.UserRepository;
 

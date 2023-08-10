@@ -1,4 +1,4 @@
-package ru.example.demoapp.convertor;
+package ru.example.demoapp.util.convertor;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
