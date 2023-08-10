@@ -13,12 +13,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class SearchServiceImpl implements SearchService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public SearchServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }

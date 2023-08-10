@@ -20,15 +20,17 @@ public class JWTUtil {
     @Value("${jwt.minutesLifeTime}")
     private Integer minutesLifeTime;
 
-    public String generateToken(String username){
-        return JWT.create()
-                .withSubject("UserDetails")
-                .withClaim("username", username)
-                .withIssuedAt(new Date())
-                .withIssuer("demoapp")
-                .withExpiresAt(Date.from(ZonedDateTime.now().plusMinutes(minutesLifeTime).toInstant()))
-                .sign(Algorithm.HMAC256(secret));
+    public JwtResponse generateToken(String username){
+        Date exiparationDate = Date.from(ZonedDateTime.now().plusMinutes(minutesLifeTime).toInstant());
 
+        String jwt =  JWT.create()
+                        .withSubject("UserDetails")
+                        .withClaim("username", username)
+                        .withIssuedAt(new Date())
+                        .withIssuer("demoapp")
+                        .withExpiresAt(exiparationDate)
+                        .sign(Algorithm.HMAC256(secret));
+        return new JwtResponse(jwt, exiparationDate);
     }
 
     public String getClaim(String token){

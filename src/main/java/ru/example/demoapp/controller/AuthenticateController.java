@@ -1,10 +1,13 @@
 package ru.example.demoapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +17,16 @@ import ru.example.demoapp.dto.LoginUserDto;
 import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.RegisterServiceImpl;
-import ru.example.demoapp.util.JWTUtil;
+import ru.example.demoapp.util.*;
 import ru.example.demoapp.validator.RegisterUserDTOValidator;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("")
-public class AuthentificateController {
+public class AuthenticateController {
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final RegisterUserDTOValidator registerUserDTOValidator;
@@ -30,7 +34,7 @@ public class AuthentificateController {
     private final DtoConvertor dtoConvertor;
 
     @Autowired
-    public AuthentificateController(JWTUtil jwtUtil, AuthenticationManager authenticationManager, RegisterUserDTOValidator registerUserDTOValidator, RegisterServiceImpl registerService, DtoConvertor dtoConvertor) {
+    public AuthenticateController(JWTUtil jwtUtil, AuthenticationManager authenticationManager, RegisterUserDTOValidator registerUserDTOValidator, RegisterServiceImpl registerService, DtoConvertor dtoConvertor) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.registerUserDTOValidator = registerUserDTOValidator;
@@ -40,35 +44,40 @@ public class AuthentificateController {
 
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody LoginUserDto loginUserDto,
-                                     BindingResult bindingResult){
+    public ResponseEntity<?> login(@RequestBody LoginUserDto loginUserDto,
+                                              BindingResult bindingResult){
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(),
                         loginUserDto.getPassword());
         try {
             authenticationManager.authenticate(token);
         } catch (BadCredentialsException e){
-            return Map.of("message","wrong pass or login");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong login or password");
         }
 
-        String jwtToken = jwtUtil.generateToken(loginUserDto.getUsername());
-        return Map.of("jwtToken", jwtToken);
+        JwtResponse jwt = jwtUtil.generateToken(loginUserDto.getUsername());
+
+        return ResponseEntity.ok(jwt);
     }
 
     @PostMapping("/register")
-    public Map<String, String> registerUser(@RequestBody @Valid RegisterUserDto registerUserDTO,
-                                            BindingResult bindingResult) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterUserDto registerUserDTO,
+                            BindingResult bindingResult) {
         registerUserDTOValidator.validate(registerUserDTO, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            //TODO обработать ошибки
-            return Map.of("oshibka", "hasErrors");
+            List<FieldError> errors = bindingResult.getFieldErrors();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(errors);
         }
 
         User user = dtoConvertor.fromRegisterUserDtoToUser(registerUserDTO);
         registerService.register(user);
 
-        String jwtToken = jwtUtil.generateToken(user.getUsername());
-        return Map.of("token", jwtToken);
+        JwtResponse jwt = jwtUtil.generateToken(user.getUsername());
+
+        return ResponseEntity.ok(jwt);
     }
+
 }
