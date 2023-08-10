@@ -6,10 +6,11 @@ import ru.example.demoapp.model.Friendship;
 import ru.example.demoapp.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FriendshipRepository extends JpaRepository<Friendship, Friendship.FriendshipId> {
-    //TODO
-    List<Friendship> findAllBySender(User user);
+    List<Friendship> findAllBySender(User senderUser);
 
+    Optional<Friendship> findFriendshipBySenderAndReceiver(User senderUser, User receiverUser);
 }

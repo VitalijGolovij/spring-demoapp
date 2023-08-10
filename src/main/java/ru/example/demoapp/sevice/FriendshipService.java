@@ -8,5 +8,9 @@ import java.util.List;
 
 public interface FriendshipService {
 
-    public List<UserInfoDto> getFriends(User user);
+    public List<UserInfoDto> getFriends(User principalUser);
+
+    public void addFriend(User senderUser, User receiverUser);
+
+    public void deleteFriend(User senderUser, User receiverUser);
 }
