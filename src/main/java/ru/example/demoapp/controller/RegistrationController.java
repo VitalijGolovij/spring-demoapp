@@ -16,41 +16,41 @@ import ru.example.demoapp.validator.RegisterUserDTOValidator;
 import javax.validation.Valid;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/register")
-public class RegistrationController {
-    private final ModelMapper modelMapper;
-    private final RegisterUserDTOValidator registerUserDTOValidator;
-    private final RegisterServiceImpl registerService;
-    private final JWTUtil jwtUtil;
-
-    @Autowired
-    public RegistrationController(ModelMapper modelMapper, RegisterUserDTOValidator registerUserDTOValidator,
-                                  RegisterServiceImpl registerService, JWTUtil jwtUtil) {
-        this.modelMapper = modelMapper;
-        this.registerUserDTOValidator = registerUserDTOValidator;
-        this.registerService = registerService;
-        this.jwtUtil = jwtUtil;
-    }
-
-    @PostMapping("")
-    public Map<String, String> registerUser(@RequestBody @Valid RegisterUserDto registerUserDTO,
-                                             BindingResult bindingResult){
-        registerUserDTOValidator.validate(registerUserDTO, bindingResult);
-
-        if (bindingResult.hasErrors()){
-            //TODO обработать ошибки
-            return Map.of("oshibka", "hasErrors");
-        }
-
-        User user = convertToUser(registerUserDTO);
-        registerService.register(user);
-
-        String jwtToken = jwtUtil.generateToken(user.getUsername());
-        return Map.of("token", jwtToken);
-    }
-
-    private User convertToUser(RegisterUserDto registerUserDTO){
-        return modelMapper.map(registerUserDTO, User.class);
-    }
-}
+//@RestController
+//@RequestMapping("/register")
+//public class RegistrationController {
+//    private final ModelMapper modelMapper;
+//    private final RegisterUserDTOValidator registerUserDTOValidator;
+//    private final RegisterServiceImpl registerService;
+//    private final JWTUtil jwtUtil;
+//
+//    @Autowired
+//    public RegistrationController(ModelMapper modelMapper, RegisterUserDTOValidator registerUserDTOValidator,
+//                                  RegisterServiceImpl registerService, JWTUtil jwtUtil) {
+//        this.modelMapper = modelMapper;
+//        this.registerUserDTOValidator = registerUserDTOValidator;
+//        this.registerService = registerService;
+//        this.jwtUtil = jwtUtil;
+//    }
+//
+//    @PostMapping("")
+//    public Map<String, String> registerUser(@RequestBody @Valid RegisterUserDto registerUserDTO,
+//                                             BindingResult bindingResult){
+//        registerUserDTOValidator.validate(registerUserDTO, bindingResult);
+//
+//        if (bindingResult.hasErrors()){
+//            //TODO обработать ошибки
+//            return Map.of("oshibka", "hasErrors");
+//        }
+//
+//        User user = convertToUser(registerUserDTO);
+//        registerService.register(user);
+//
+//        String jwtToken = jwtUtil.generateToken(user.getUsername());
+//        return Map.of("token", jwtToken);
+//    }
+//
+//    private User convertToUser(RegisterUserDto registerUserDTO){
+//        return modelMapper.map(registerUserDTO, User.class);
+//    }
+//}
