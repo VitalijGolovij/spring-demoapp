@@ -47,4 +47,8 @@ public class UserDetailsDto implements org.springframework.security.core.userdet
     public boolean isEnabled() {
         return true;
     }
+
+    public User getUser(){
+        return this.user;
+    }
 }
