@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import ru.example.demoapp.convertor.DtoConvertor;
 import ru.example.demoapp.dto.UserInfoDto;
 import ru.example.demoapp.exception.FriendshipException;
 import ru.example.demoapp.exception.UserNotFoundException;
@@ -14,6 +15,7 @@ import ru.example.demoapp.dto.UserDetailsDto;
 import ru.example.demoapp.sevice.FriendshipServiceImpl;
 import ru.example.demoapp.sevice.UserService;
 import ru.example.demoapp.util.FriendshipErrorResponse;
+import ru.example.demoapp.util.FriendActionResponse;
 import ru.example.demoapp.util.UserErrorResponse;
 
 import java.util.List;
@@ -23,11 +25,13 @@ import java.util.List;
 public class FriendController {
     private final FriendshipServiceImpl friendshipService;
     private final UserService userService;
+    private final DtoConvertor dtoConvertor;
 
     @Autowired
-    public FriendController(FriendshipServiceImpl friendshipService, UserService userService) {
+    public FriendController(FriendshipServiceImpl friendshipService, UserService userService, DtoConvertor dtoConvertor) {
         this.friendshipService = friendshipService;
         this.userService = userService;
+        this.dtoConvertor = dtoConvertor;
     }
 
     @GetMapping("")
@@ -42,7 +46,10 @@ public class FriendController {
         User receiverUser = userService.getUser(id);
         friendshipService.addFriend(currentUser, receiverUser);
 
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new FriendActionResponse(
+                "success",
+                dtoConvertor.fromUserToUserInfoDto(receiverUser)
+        ));
     }
 
     @DeleteMapping("/{id}")
@@ -51,7 +58,10 @@ public class FriendController {
         User receiverUser = userService.getUser(id);
         friendshipService.deleteFriend(currentUser, receiverUser);
 
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.ok(new FriendActionResponse(
+                "success",
+                dtoConvertor.fromUserToUserInfoDto(receiverUser)
+        ));
     }
 
     private User getCurrentUser(){
