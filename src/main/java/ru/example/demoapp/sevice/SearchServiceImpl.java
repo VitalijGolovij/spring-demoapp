@@ -4,10 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.example.demoapp.dto.UserInfoDto;
+import ru.example.demoapp.exception.UserNotFoundException;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +27,15 @@ public class SearchServiceImpl implements SearchService{
     public List<UserInfoDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(this::convertToUserInfoDto).collect(Collectors.toList());
+    }
+
+    public User getUser(Long id){
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty())
+            throw new UserNotFoundException();
+
+        return user.get();
     }
 
     private UserInfoDto convertToUserInfoDto(User user){
