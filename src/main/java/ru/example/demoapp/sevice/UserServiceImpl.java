@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.example.demoapp.dto.UserInfoDto;
+import ru.example.demoapp.util.convertor.DtoConvertor;
+import ru.example.demoapp.util.convertor.DtoConvertorImpl;
 import ru.example.demoapp.util.exception.UserNotFoundException;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.repository.UserRepository;
@@ -15,18 +17,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final DtoConvertorImpl dtoConvertor;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, DtoConvertorImpl dtoConvertor) {
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
+        this.dtoConvertor = dtoConvertor;
     }
 
     @Override
     public List<UserInfoDto> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(this::convertToUserInfoDto).collect(Collectors.toList());
+        return users.stream().map(dtoConvertor::fromUserToUserInfoDto).toList();
     }
 
     public User getUser(Long id){
@@ -36,9 +38,5 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException();
 
         return user.get();
-    }
-
-    private UserInfoDto convertToUserInfoDto(User user){
-        return modelMapper.map(user, UserInfoDto.class);
     }
 }

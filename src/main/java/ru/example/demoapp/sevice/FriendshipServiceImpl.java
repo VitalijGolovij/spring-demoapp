@@ -35,7 +35,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     @Transactional
-    public void addFriend(final User senderUser, final User receiverUser) {
+    public void addFriend(User senderUser, User receiverUser) {
         Optional<Friendship> friendship = friendshipRepository.findFriendshipBySenderAndReceiver(
                 senderUser,
                 receiverUser
