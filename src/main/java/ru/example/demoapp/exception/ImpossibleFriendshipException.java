@@ -1,4 +1,4 @@
-package ru.example.demoapp.util.exception;
+package ru.example.demoapp.exception;
 
 public class ImpossibleFriendshipException extends FriendshipException{
     public ImpossibleFriendshipException(){

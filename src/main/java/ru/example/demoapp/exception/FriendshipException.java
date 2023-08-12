@@ -1,4 +1,4 @@
-package ru.example.demoapp.util.exception;
+package ru.example.demoapp.exception;
 
 public class FriendshipException extends RuntimeException{
     public FriendshipException(String message){
