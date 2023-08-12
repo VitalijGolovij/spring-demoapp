@@ -1,82 +1,18 @@
-package ru.example.demoapp.controller;//package ru.example.demoapp.controller;
-//
-//import com.fasterxml.jackson.annotation.JsonTypeInfo;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.BadCredentialsException;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import ru.example.demoapp.convertor.DtoConvertor;
-//import ru.example.demoapp.dto.LoginUserDto;
-//import ru.example.demoapp.sevice.RegisterService;
-//import ru.example.demoapp.util.JWTUtil;
-//import ru.example.demoapp.validator.RegisterUserDTOValidator;
-//
-//import static org.mockito.Matchers.any;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.when;
-//
-//public class AuthenticateControllerTest {
-//    @Mock
-//    private JWTUtil jwtUtil;
-//    @Mock
-//    private AuthenticationManager authenticationManager;
-//    @Mock
-//    private RegisterUserDTOValidator registerUserDTOValidator;
-//    @Mock
-//    private RegisterService registerService;
-//    @Mock
-//    private DtoConvertor dtoConvertor;
-//    @InjectMocks
-//    private AuthenticateController authenticateController;
-//
-//    @Test
-//    public void loginFailure(){
-//        LoginUserDto loginUserDto = new LoginUserDto();
-//        loginUserDto.setUsername("a");
-//        loginUserDto.setPassword("b");
-//
-//        UsernamePasswordAuthenticationToken token =
-//                new UsernamePasswordAuthenticationToken(
-//                        loginUserDto.getUsername(),
-//                        loginUserDto.getPassword()
-//                );
-//
-//        when(authenticationManager.authenticate(token)).thenThrow(new BadCredentialsException("bad credentials"));
-//
-//        ResponseEntity<?> result = authenticateController.login(loginUserDto, null);
-//
-//        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
-//        Assertions.assertEquals("Wrong login or password", result.getBody());
-//        verify(authenticationManager).authenticate(token);
-//    }
-//
-//}
-
+package ru.example.demoapp.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import ru.example.demoapp.controller.AuthenticateController;
 import ru.example.demoapp.convertor.DtoConvertor;
 import ru.example.demoapp.dto.JwtResponse;
 import ru.example.demoapp.dto.LoginUserDto;
@@ -87,7 +23,6 @@ import ru.example.demoapp.util.JWTUtil;
 import ru.example.demoapp.validator.RegisterUserDTOValidator;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
