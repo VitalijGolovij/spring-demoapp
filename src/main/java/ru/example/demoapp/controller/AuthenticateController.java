@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.example.demoapp.convertor.DtoConvertor;
+import ru.example.demoapp.dto.ErrorResponse;
 import ru.example.demoapp.dto.JwtResponse;
 import ru.example.demoapp.dto.LoginUserDto;
 import ru.example.demoapp.dto.RegisterUserDto;
@@ -40,11 +41,8 @@ public class AuthenticateController {
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(loginUserDto.getUsername(),
                         loginUserDto.getPassword());
-        try {
-            authenticationManager.authenticate(token);
-        } catch (BadCredentialsException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong login or password");
-        }
+
+        authenticationManager.authenticate(token);
 
         JwtResponse jwt = jwtUtil.generateToken(loginUserDto.getUsername());
 
@@ -60,7 +58,7 @@ public class AuthenticateController {
             List<FieldError> errors = bindingResult.getFieldErrors();
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(errors);
+                    .body(new ErrorResponse(errors.toString()));
         }
 
         User user = dtoConvertor.fromRegisterUserDtoToUser(registerUserDTO);
