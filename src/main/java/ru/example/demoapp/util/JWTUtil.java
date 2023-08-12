@@ -5,24 +5,29 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.example.demoapp.dto.JwtResponse;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.HashMap;
+
 
 @Component
+@RequiredArgsConstructor
 public class JWTUtil {
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.minutesLifeTime}")
     private Integer minutesLifeTime;
+    private final Clock clock;
 
     public JwtResponse generateToken(String username){
-        Date exiparationDate = Date.from(ZonedDateTime.now().plusMinutes(minutesLifeTime).toInstant());
-
+        Date exiparationDate = Date.from(LocalDateTime.now(clock).plusMinutes(minutesLifeTime).toInstant(ZoneOffset.UTC));
         String jwt =  JWT.create()
                         .withSubject("UserDetails")
                         .withClaim("username", username)

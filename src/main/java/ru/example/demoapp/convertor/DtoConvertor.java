@@ -1,4 +1,4 @@
-package ru.example.demoapp.util.convertor;
+package ru.example.demoapp.convertor;
 
 import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.dto.UserInfoDto;

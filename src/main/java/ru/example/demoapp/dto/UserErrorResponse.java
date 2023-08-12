@@ -1,4 +1,4 @@
-package ru.example.demoapp.util;
+package ru.example.demoapp.dto;
 
 import lombok.Data;
 
