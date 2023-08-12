@@ -1,25 +1,15 @@
 package ru.example.demoapp.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.example.demoapp.sevice.FriendshipService;
 import ru.example.demoapp.convertor.DtoConvertor;
 import ru.example.demoapp.dto.UserInfoDto;
-import ru.example.demoapp.exception.FriendshipException;
-import ru.example.demoapp.exception.UserNotFoundException;
 import ru.example.demoapp.model.User;
-import ru.example.demoapp.dto.UserDetailsDto;
 import ru.example.demoapp.sevice.PrincipalService;
 import ru.example.demoapp.sevice.UserService;
-import ru.example.demoapp.dto.FriendshipErrorResponse;
 import ru.example.demoapp.dto.FriendActionResponse;
-import ru.example.demoapp.dto.UserErrorResponse;
 
 import java.util.List;
 
