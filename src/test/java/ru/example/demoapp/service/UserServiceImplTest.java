@@ -1,5 +1,6 @@
 package ru.example.demoapp.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,14 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import ru.example.demoapp.dto.UserInfoDto;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.repository.UserRepository;
-import ru.example.demoapp.sevice.UserService;
 import ru.example.demoapp.sevice.UserServiceImpl;
-import ru.example.demoapp.util.convertor.DtoConvertor;
-import ru.example.demoapp.util.convertor.DtoConvertorImpl;
+import ru.example.demoapp.convertor.DtoConvertorImpl;
 
 import java.util.*;
 
@@ -29,8 +27,15 @@ class UserServiceImplTest {
     @Mock
     private DtoConvertorImpl dtoConvertor;
 
+    @AfterEach
+    public void verifyMocks() {
+        verifyNoMoreInteractions(
+                userRepository,
+                dtoConvertor
+        );
+    }
     @Test
-    void getAllUser(){
+    void testGetAllUser(){
         List<User> userList = userList();
 
         UserInfoDto userInfoDto1 = new UserInfoDto();
@@ -47,14 +52,14 @@ class UserServiceImplTest {
         List<UserInfoDto> result = userService.getAllUsers();
 
         Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals(result.get(0).getUsername(), "abc");
-        Assertions.assertEquals(result.get(1).getUsername(), "1abc");
+        Assertions.assertEquals(result.get(0), userInfoDto1);
+        Assertions.assertEquals(result.get(1), userInfoDto2);
         Mockito.verify(userRepository).findAll();
         Mockito.verify(dtoConvertor, times(2)).fromUserToUserInfoDto(any(User.class));
     }
 
     @Test
-    void getUser(){
+    void testGetUser(){
         Long userId = 1L;
         User user = new User();
         user.setId(userId);
