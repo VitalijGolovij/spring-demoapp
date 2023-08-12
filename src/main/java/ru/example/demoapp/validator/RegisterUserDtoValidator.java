@@ -5,16 +5,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.example.demoapp.dto.RegisterUserDto;
-import ru.example.demoapp.sevice.UserDetailServiceImpl;
+import ru.example.demoapp.sevice.UserDetailService;
 
 import java.util.Objects;
 
 @Component
-public class RegisterUserDTOValidator implements Validator {
-    private final UserDetailServiceImpl userDetailService;
+public class RegisterUserDtoValidator implements Validator {
+    private final UserDetailService userDetailService;
 
     @Autowired
-    public RegisterUserDTOValidator(UserDetailServiceImpl userDetailService) {
+    public RegisterUserDtoValidator(UserDetailService userDetailService) {
         this.userDetailService = userDetailService;
     }
 

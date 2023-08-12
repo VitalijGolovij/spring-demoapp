@@ -1,14 +1,12 @@
 package ru.example.demoapp.config;
-
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.example.demoapp.sevice.UserDetailServiceImpl;
 import ru.example.demoapp.util.JWTUtil;
 
 import javax.servlet.FilterChain;
@@ -21,22 +19,19 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
-    private final UserDetailServiceImpl userDetailService;
+    private final UserDetailsService userDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String headerToken = request.getHeader("Authorization");
-        //TODO рефакторинг
         if (isValidToken(headerToken)) {
-            if (!headerToken.isBlank()) {
                 String tokenWithoutBearer = extractTokenFromHeader(headerToken);
 
                 if (tokenWithoutBearer.isBlank()) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT token");
+                    setResponseStatus(response);
                 } else {
                     handleValidToken(tokenWithoutBearer, response);
                 }
-            }
         }
         filterChain.doFilter(request, response);
     }
@@ -57,7 +52,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         } catch (JWTVerificationException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT Token not valid");
+            setResponseStatus(response);
         }
     }
 
@@ -71,5 +66,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private boolean isValidToken(String token){
         return token != null && !token.isBlank() && token.startsWith("Bearer ");
+    }
+
+    private void setResponseStatus(HttpServletResponse response){
+        response.setStatus(401);
     }
 }
