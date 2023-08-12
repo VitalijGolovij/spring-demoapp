@@ -20,7 +20,7 @@ import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.RegisterService;
 import ru.example.demoapp.util.JWTUtil;
-import ru.example.demoapp.validator.RegisterUserDTOValidator;
+import ru.example.demoapp.validator.RegisterUserDtoValidator;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ public class AuthenticateControllerTest {
     @Mock
     private AuthenticationManager authenticationManager;
     @Mock
-    private RegisterUserDTOValidator registerUserDTOValidator;
+    private RegisterUserDtoValidator registerUserDTOValidator;
     @Mock
     private RegisterService registerService;
     @Mock

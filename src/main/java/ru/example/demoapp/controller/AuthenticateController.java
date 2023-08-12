@@ -1,7 +1,6 @@
 package ru.example.demoapp.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,9 +18,8 @@ import ru.example.demoapp.dto.LoginUserDto;
 import ru.example.demoapp.dto.RegisterUserDto;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.RegisterService;
-import ru.example.demoapp.sevice.RegisterServiceImpl;
 import ru.example.demoapp.util.*;
-import ru.example.demoapp.validator.RegisterUserDTOValidator;
+import ru.example.demoapp.validator.RegisterUserDtoValidator;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,7 +30,7 @@ import java.util.List;
 public class AuthenticateController {
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final RegisterUserDTOValidator registerUserDTOValidator;
+    private final RegisterUserDtoValidator registerUserDTOValidator;
     private final RegisterService registerService;
     private final DtoConvertor dtoConvertor;
 
