@@ -23,6 +23,18 @@ public class SecurityConfig{
     private final UserDetailsService userDetailService;
     private final JWTFilter jwtFilter;
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -46,6 +58,7 @@ public class SecurityConfig{
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/login","/register").permitAll()
+                .antMatchers(SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()

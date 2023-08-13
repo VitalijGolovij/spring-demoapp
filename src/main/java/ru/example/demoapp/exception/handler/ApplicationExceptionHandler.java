@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.example.demoapp.dto.ErrorResponse;
 import ru.example.demoapp.exception.FriendshipException;
+import ru.example.demoapp.exception.InvalidDataException;
 import ru.example.demoapp.exception.UserNotFoundException;
 
 @ControllerAdvice
@@ -30,5 +31,12 @@ public class ApplicationExceptionHandler {
         ErrorResponse response = new ErrorResponse("Wrong login or password");
 
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(InvalidDataException e){
+        ErrorResponse response = new ErrorResponse(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
