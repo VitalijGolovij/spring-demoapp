@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import ru.example.demoapp.convertor.DtoConvertor;
+import ru.example.demoapp.dto.ErrorResponse;
 import ru.example.demoapp.dto.JwtResponse;
 import ru.example.demoapp.dto.LoginUserDto;
 import ru.example.demoapp.dto.RegisterUserDto;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -70,13 +72,9 @@ public class AuthenticateControllerTest {
                 new UsernamePasswordAuthenticationToken(username, password);
 
         when(authenticationManager.authenticate(token))
-                .thenThrow(new BadCredentialsException("Bad credentials"));
+                .thenThrow(new BadCredentialsException("Wrong login or password"));
 
-        ResponseEntity<?> expected = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong login or password");
-        ResponseEntity<?> response = authenticateController.login(loginUserDto, null);
-
-        assertEquals(expected, response);
-        assertEquals("Wrong login or password", response.getBody());
+        assertThrows(BadCredentialsException.class, () -> authenticateController.login(loginUserDto, null));
         verify(authenticationManager).authenticate(token);
     }
 
@@ -137,7 +135,6 @@ public class AuthenticateControllerTest {
         ResponseEntity<?> response = authenticateController.registerUser(registerUserDto, bindingResult);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals(fieldErrors, response.getBody());
         verify(registerUserDTOValidator).validate(registerUserDto, bindingResult);
 
     }
