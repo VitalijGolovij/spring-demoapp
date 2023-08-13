@@ -24,6 +24,7 @@ public class RegisterUserDto {
     @Email
     private String email;
 
+    @Size(min = 4, max = 100, message = "Password size should be greater than 4 and less than 100 characters")
     private String password;
 
     private String confirmPassword;
