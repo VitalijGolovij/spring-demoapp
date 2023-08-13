@@ -14,10 +14,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import ru.example.demoapp.convertor.DtoConvertor;
-import ru.example.demoapp.dto.ErrorResponse;
-import ru.example.demoapp.dto.JwtResponse;
-import ru.example.demoapp.dto.LoginUserDto;
-import ru.example.demoapp.dto.RegisterUserDto;
+import ru.example.demoapp.dto.*;
+import ru.example.demoapp.exception.InvalidDataException;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.RegisterService;
 import ru.example.demoapp.util.JWTUtil;
@@ -94,10 +92,9 @@ public class AuthenticateControllerTest {
         JwtResponse jwt = new JwtResponse("jwtToken", null);
         when(jwtUtil.generateToken(loginUserDto.getUsername())).thenReturn(jwt);
 
-        ResponseEntity<?> response = authenticateController.login(loginUserDto, null);
+        JwtResponse response = authenticateController.login(loginUserDto, null);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(jwt, response.getBody());
+        assertEquals(jwt, response);
         verify(authenticationManager).authenticate(token);
         verify(jwtUtil).generateToken(username);
     }
@@ -114,10 +111,9 @@ public class AuthenticateControllerTest {
         doNothing().when(registerService).register(user);
         when(jwtUtil.generateToken(user.getUsername())).thenReturn(jwt);
 
-        ResponseEntity<?> response = authenticateController.registerUser(registerUserDto, bindingResult);
+        JwtResponse response = authenticateController.registerUser(registerUserDto, bindingResult);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(jwt, response.getBody());
+        assertEquals(jwt, response);
         verify(dtoConvertor).fromRegisterUserDtoToUser(registerUserDto);
         verify(registerService).register(user);
         verify(jwtUtil).generateToken(user.getUsername());
@@ -132,9 +128,9 @@ public class AuthenticateControllerTest {
         when(bindingResult.hasErrors()).thenReturn(true);
         when(bindingResult.getFieldErrors()).thenReturn(fieldErrors);
 
-        ResponseEntity<?> response = authenticateController.registerUser(registerUserDto, bindingResult);
+//        JwtResponse response = authenticateController.registerUser(registerUserDto, bindingResult);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertThrows(InvalidDataException.class, ()->authenticateController.registerUser(registerUserDto, bindingResult));
         verify(registerUserDTOValidator).validate(registerUserDto, bindingResult);
 
     }

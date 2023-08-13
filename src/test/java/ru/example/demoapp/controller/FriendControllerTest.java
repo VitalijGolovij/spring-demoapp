@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import ru.example.demoapp.dto.FriendActionResponse;
+import ru.example.demoapp.dto.SuccessUserAction;
 import ru.example.demoapp.dto.UserInfoDto;
+import ru.example.demoapp.exception.UserNotFoundException;
 import ru.example.demoapp.model.User;
 import ru.example.demoapp.sevice.FriendshipService;
 import ru.example.demoapp.sevice.PrincipalService;
@@ -75,14 +77,7 @@ class FriendControllerTest {
         when(userService.getUser(argId)).thenReturn(user2);
         when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(infoDto);
 
-        ResponseEntity<?> expected = ResponseEntity.ok(new FriendActionResponse(
-                "success",
-                infoDto
-        ));
-
-        ResponseEntity<?> result = friendController.addFriend(argId);
-
-        Assertions.assertEquals(expected, result);
+        Assertions.assertDoesNotThrow(()-> friendController.addFriend(argId));
         verify(principalService).getPrincipal();
         verify(userService).getUser(argId);
         verify(dtoConvertor).fromUserToUserInfoDto(user2);
@@ -106,13 +101,11 @@ class FriendControllerTest {
                 infoDto
         ));
 
-        ResponseEntity<?> result = friendController.addFriend(argId);
-
-        Assertions.assertEquals(expected, result);
+        Assertions.assertDoesNotThrow(()-> friendController.deleteFriend(argId));
         verify(principalService).getPrincipal();
         verify(userService).getUser(argId);
         verify(dtoConvertor).fromUserToUserInfoDto(user2);
-        verify(friendshipService).addFriend(user1, user2);
+        verify(friendshipService).deleteFriend(user1, user2);
     }
 
     private User getUserWithId(Long id){

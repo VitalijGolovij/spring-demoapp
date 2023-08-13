@@ -1,5 +1,7 @@
 package ru.example.demoapp.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.example.demoapp.convertor.DtoConvertor;
@@ -17,11 +19,15 @@ public class UserController {
     private final DtoConvertor dtoConvertor;
 
     @GetMapping("")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Get users")
     public List<UserInfoDto> getAllUsers(){
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Get user by id")
     public UserInfoDto getUser(@PathVariable Long id){
         User user = userService.getUser(id);
         return dtoConvertor.fromUserToUserInfoDto(user);
