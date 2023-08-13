@@ -33,9 +33,8 @@ public class RegisterUserDtoValidator implements Validator {
             );
         }
         if (!Objects.equals(registerUserDTO.getPassword(), registerUserDTO.getConfirmPassword())){
-            errors.rejectValue("passwordConfirm","2",
-                    "incorrect password confirmation"
-            );
+            errors.rejectValue("confirmPassword","2",
+                    "incorrect password confirmation");
         }
     }
 }
