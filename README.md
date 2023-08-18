@@ -26,11 +26,7 @@
    git clone https://github.com/VitalijGolovij/spring-demoapp.git
    cd spring-demoapp
    ```
-2. Сборка проект
-    ```bash
-   mvn package
-    ```
-3. Запуск Docker-контейнеров
+2. Запуск Docker-контейнеров
    ```bash
    cd docker
    docker-compose up
