@@ -128,8 +128,6 @@ public class AuthenticateControllerTest {
         when(bindingResult.hasErrors()).thenReturn(true);
         when(bindingResult.getFieldErrors()).thenReturn(fieldErrors);
 
-//        JwtResponse response = authenticateController.registerUser(registerUserDto, bindingResult);
-
         assertThrows(InvalidDataException.class, ()->authenticateController.registerUser(registerUserDto, bindingResult));
         verify(registerUserDTOValidator).validate(registerUserDto, bindingResult);
 

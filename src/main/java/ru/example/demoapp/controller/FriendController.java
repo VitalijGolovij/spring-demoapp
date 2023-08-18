@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.example.demoapp.dto.SuccessUserAction;
-import ru.example.demoapp.sevice.FriendshipService;
+import ru.example.demoapp.dto.SuccessFriendActionResponse;
+import ru.example.demoapp.sevice.FriendService;
 import ru.example.demoapp.convertor.DtoConvertor;
 import ru.example.demoapp.dto.UserInfoDto;
 import ru.example.demoapp.model.User;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/user/friends")
 @RequiredArgsConstructor
 public class FriendController {
-    private final FriendshipService friendshipService;
+    private final FriendService friendService;
     private final UserService userService;
     private final DtoConvertor dtoConvertor;
     private final PrincipalService principalService;
@@ -27,30 +27,63 @@ public class FriendController {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "Get friends")
     public List<UserInfoDto> getFriends(){
-        User principalUser = principalService.getPrincipal();
-        return friendshipService.getFriends(principalUser);
+        User principalUser = principalService.getPrincipalUser();
+        return friendService.getFriends(principalUser);
     }
 
-
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/invite")
     @SecurityRequirement(name = "JWT")
-    @Operation(summary = "Add friend by id")
-    public SuccessUserAction addFriend(@PathVariable Long id){
-        User principalUser = principalService.getPrincipal();
+    @Operation(summary = "Invite to friends")
+    public SuccessFriendActionResponse inviteToFriend(@PathVariable Long id){
+        User principalUser = principalService.getPrincipalUser();
         User receiverUser = userService.getUser(id);
-        friendshipService.addFriend(principalUser, receiverUser);
 
-        return new SuccessUserAction(dtoConvertor.fromUserToUserInfoDto(receiverUser));
+        friendService.inviteToFriend(principalUser, receiverUser);
+
+        return new SuccessFriendActionResponse(dtoConvertor.fromUserToUserInfoDto(receiverUser));
+    }
+
+    @DeleteMapping("/{id}/invite")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Cancel an invitation to friends")
+    public SuccessFriendActionResponse cancelInviteFriend(@PathVariable Long id){
+        User principalUser = principalService.getPrincipalUser();
+        User receiverUser = userService.getUser(id);
+
+        friendService.cancelInviteToFriend(principalUser, receiverUser);
+
+        return new SuccessFriendActionResponse(dtoConvertor.fromUserToUserInfoDto(receiverUser));
+    }
+
+    @PostMapping("/{id}/accept")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Accept an incoming friend invitation")
+    public SuccessFriendActionResponse acceptToFriend(@PathVariable Long id){
+        User principalUser = principalService.getPrincipalUser();
+        User receiverUser = userService.getUser(id);
+
+        friendService.acceptToFriend(principalUser, receiverUser);
+
+        return new SuccessFriendActionResponse(dtoConvertor.fromUserToUserInfoDto(receiverUser));
     }
 
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "Delete friend by id")
-    public SuccessUserAction deleteFriend(@PathVariable Long id){
-        User principalUser = principalService.getPrincipal();
+    public SuccessFriendActionResponse deleteFriend(@PathVariable Long id){
+        User principalUser = principalService.getPrincipalUser();
         User receiverUser = userService.getUser(id);
-        friendshipService.deleteFriend(principalUser, receiverUser);
 
-        return new SuccessUserAction(dtoConvertor.fromUserToUserInfoDto(receiverUser));
+        friendService.deleteFriend(principalUser, receiverUser);
+
+        return new SuccessFriendActionResponse(dtoConvertor.fromUserToUserInfoDto(receiverUser));
+    }
+
+    @GetMapping("/requests")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Get friend requests")
+    public List<UserInfoDto> getFriendRequests(){
+        User principalUser = principalService.getPrincipalUser();
+        return friendService.getFriendRequests(principalUser);
     }
 }

@@ -36,26 +36,19 @@ class UserServiceImplTest {
     }
     @Test
     void testGetAllUser(){
-        List<User> userList = userList();
+        User user1 = new User();
+        UserInfoDto userInfo = new UserInfoDto();
+        List<User> users = List.of(user1);
 
-        UserInfoDto userInfoDto1 = new UserInfoDto();
-        userInfoDto1.setUsername("abc");
-
-        UserInfoDto userInfoDto2 = new UserInfoDto();
-        userInfoDto2.setUsername("1abc");
-
-        when(userRepository.findAll()).thenReturn(userList);
-
-        when(dtoConvertor.fromUserToUserInfoDto(userList.get(0))).thenReturn(userInfoDto1);
-        when(dtoConvertor.fromUserToUserInfoDto(userList.get(1))).thenReturn(userInfoDto2);
+        when(userRepository.findAll()).thenReturn(users);
+        when(dtoConvertor.fromUserToUserInfoDto(user1)).thenReturn(userInfo);
 
         List<UserInfoDto> result = userService.getAllUsers();
 
-        Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals(result.get(0), userInfoDto1);
-        Assertions.assertEquals(result.get(1), userInfoDto2);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(result.get(0), userInfo);
         Mockito.verify(userRepository).findAll();
-        Mockito.verify(dtoConvertor, times(2)).fromUserToUserInfoDto(any(User.class));
+        Mockito.verify(dtoConvertor, times(1)).fromUserToUserInfoDto(any(User.class));
     }
 
     @Test

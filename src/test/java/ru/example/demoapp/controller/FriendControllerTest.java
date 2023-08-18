@@ -7,13 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import ru.example.demoapp.dto.FriendActionResponse;
-import ru.example.demoapp.dto.SuccessUserAction;
+import ru.example.demoapp.dto.SuccessFriendActionResponse;
 import ru.example.demoapp.dto.UserInfoDto;
-import ru.example.demoapp.exception.UserNotFoundException;
 import ru.example.demoapp.model.User;
-import ru.example.demoapp.sevice.FriendshipService;
+import ru.example.demoapp.sevice.FriendService;
 import ru.example.demoapp.sevice.PrincipalService;
 import ru.example.demoapp.sevice.UserService;
 import ru.example.demoapp.convertor.DtoConvertor;
@@ -26,7 +23,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class FriendControllerTest {
     @Mock
-    private FriendshipService friendshipService;
+    private FriendService friendService;
     @Mock
     private UserService userService;
     @Mock
@@ -39,7 +36,7 @@ class FriendControllerTest {
     @AfterEach
     public void verifyMocks() {
         verifyNoMoreInteractions(
-                friendshipService,
+                friendService,
                 userService,
                 dtoConvertor,
                 principalService
@@ -47,7 +44,7 @@ class FriendControllerTest {
     }
 
     @Test
-    public void testGetFiend(){
+    public void testGetFiends(){
         User user1 = getUserWithId(1L);
 
         UserInfoDto infoDto = new UserInfoDto();
@@ -55,57 +52,90 @@ class FriendControllerTest {
 
         List<UserInfoDto> userInfoDtoList = Collections.singletonList(infoDto);
 
-        when(principalService.getPrincipal()).thenReturn(user1);
-        when(friendshipService.getFriends(user1)).thenReturn(userInfoDtoList);
+        when(principalService.getPrincipalUser()).thenReturn(user1);
+        when(friendService.getFriends(user1)).thenReturn(userInfoDtoList);
 
         List<UserInfoDto> result = friendController.getFriends();
 
         Assertions.assertEquals(result, userInfoDtoList);
-        verify(principalService).getPrincipal();
-        verify(friendshipService).getFriends(user1);
+        verify(principalService).getPrincipalUser();
+        verify(friendService).getFriends(user1);
     }
 
     @Test
-    public void testAddFriend(){
-        Long argId = 1L;
-
-        User user1 = getUserWithId(2L);
-        User user2 = getUserWithId(argId);
-        UserInfoDto infoDto = getUserInfoWithId(argId);
-
-        when(principalService.getPrincipal()).thenReturn(user1);
-        when(userService.getUser(argId)).thenReturn(user2);
-        when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(infoDto);
-
-        Assertions.assertDoesNotThrow(()-> friendController.addFriend(argId));
-        verify(principalService).getPrincipal();
-        verify(userService).getUser(argId);
-        verify(dtoConvertor).fromUserToUserInfoDto(user2);
-        verify(friendshipService).addFriend(user1, user2);
-    }
-
-    @Test
-    public void testDeleteFriend(){
-        Long argId = 2L;
-
+    public void testInviteToFriend(){
         User user1 = getUserWithId(1L);
-        User user2 = getUserWithId(argId);
-        UserInfoDto infoDto = getUserInfoWithId(argId);
+        User user2 = getUserWithId(2L);
+        UserInfoDto userInfoDto = getUserInfoWithId(2L);
 
-        when(principalService.getPrincipal()).thenReturn(user1);
-        when(userService.getUser(argId)).thenReturn(user2);
-        when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(infoDto);
+        when(principalService.getPrincipalUser()).thenReturn(user1);
+        when(userService.getUser(2L)).thenReturn(user2);
+        doNothing().when(friendService).inviteToFriend(user1, user2);
+        when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(userInfoDto);
 
-        ResponseEntity<?> expected = ResponseEntity.ok(new FriendActionResponse(
-                "success",
-                infoDto
-        ));
+        SuccessFriendActionResponse expected = new SuccessFriendActionResponse(userInfoDto);
+        SuccessFriendActionResponse response = friendController.inviteToFriend(2L);
 
-        Assertions.assertDoesNotThrow(()-> friendController.deleteFriend(argId));
-        verify(principalService).getPrincipal();
-        verify(userService).getUser(argId);
+        Assertions.assertEquals(response.getUserInfo(), expected.getUserInfo());
+        verify(friendService).inviteToFriend(user1, user2);
         verify(dtoConvertor).fromUserToUserInfoDto(user2);
-        verify(friendshipService).deleteFriend(user1, user2);
+    }
+
+    @Test
+    public void testAcceptToFriend(){
+        User user1 = getUserWithId(1L);
+        User user2 = getUserWithId(2L);
+        UserInfoDto userInfoDto = getUserInfoWithId(2L);
+
+        when(principalService.getPrincipalUser()).thenReturn(user1);
+        when(userService.getUser(2L)).thenReturn(user2);
+        doNothing().when(friendService).acceptToFriend(user1, user2);
+        when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(userInfoDto);
+
+        SuccessFriendActionResponse expected = new SuccessFriendActionResponse(userInfoDto);
+        SuccessFriendActionResponse response = friendController.acceptToFriend(2L);
+
+        Assertions.assertEquals(response.getUserInfo(), expected.getUserInfo());
+        verify(friendService).acceptToFriend(user1, user2);
+        verify(dtoConvertor).fromUserToUserInfoDto(user2);
+    }
+
+    @Test
+    public void testDeleteToFriend(){
+        User user1 = getUserWithId(1L);
+        User user2 = getUserWithId(2L);
+        UserInfoDto userInfoDto = getUserInfoWithId(2L);
+
+        when(principalService.getPrincipalUser()).thenReturn(user1);
+        when(userService.getUser(2L)).thenReturn(user2);
+        doNothing().when(friendService).deleteFriend(user1, user2);
+        when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(userInfoDto);
+
+        SuccessFriendActionResponse expected = new SuccessFriendActionResponse(userInfoDto);
+        SuccessFriendActionResponse response = friendController.deleteFriend(2L);
+
+        Assertions.assertEquals(response.getUserInfo(), expected.getUserInfo());
+        verify(friendService).deleteFriend(user1, user2);
+        verify(dtoConvertor).fromUserToUserInfoDto(user2);
+    }
+
+    @Test
+    public void testCancelInviteToFriend(){
+        User user1 = getUserWithId(1L);
+        User user2 = getUserWithId(2L);
+        UserInfoDto userInfoDto = getUserInfoWithId(2L);
+
+        when(principalService.getPrincipalUser()).thenReturn(user1);
+        when(userService.getUser(2L)).thenReturn(user2);
+        doNothing().when(friendService).cancelInviteToFriend(user1, user2);
+        when(dtoConvertor.fromUserToUserInfoDto(user2)).thenReturn(userInfoDto);
+
+        SuccessFriendActionResponse expected = new SuccessFriendActionResponse(userInfoDto);
+        SuccessFriendActionResponse response = friendController.cancelInviteFriend(2L);
+
+        Assertions.assertEquals(response.getUserInfo(), expected.getUserInfo());
+        verify(friendService).cancelInviteToFriend(user1, user2);
+        verify(dtoConvertor).fromUserToUserInfoDto(user2);
     }
 
     private User getUserWithId(Long id){
