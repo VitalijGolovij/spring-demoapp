@@ -21,8 +21,18 @@ public class UserController {
     @GetMapping("")
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "Get users")
-    public List<UserInfoDto> getAllUsers(){
-        return userService.getAllUsers();
+    public List<UserInfoDto> getUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String city
+    ){
+        return userService.getUsers(
+                username,
+                firstName,
+                lastName,
+                city
+        );
     }
 
     @GetMapping("/{id}")
@@ -32,4 +42,5 @@ public class UserController {
         User user = userService.getUser(id);
         return dtoConvertor.fromUserToUserInfoDto(user);
     }
+
 }

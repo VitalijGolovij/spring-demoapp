@@ -40,14 +40,14 @@ class UserServiceImplTest {
         UserInfoDto userInfo = new UserInfoDto();
         List<User> users = List.of(user1);
 
-        when(userRepository.findAll()).thenReturn(users);
+        when(userRepository.findUsers(null, null, null, null)).thenReturn(users);
         when(dtoConvertor.fromUserToUserInfoDto(user1)).thenReturn(userInfo);
 
-        List<UserInfoDto> result = userService.getAllUsers();
+        List<UserInfoDto> result = userService.getUsers(null, null, null, null);
 
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(result.get(0), userInfo);
-        Mockito.verify(userRepository).findAll();
+        Mockito.verify(userRepository).findUsers(null, null, null, null);
         Mockito.verify(dtoConvertor, times(1)).fromUserToUserInfoDto(any(User.class));
     }
 

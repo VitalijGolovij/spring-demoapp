@@ -41,12 +41,12 @@ class UserControllerTest {
         userInfoDto.setId(1L);
         userInfoDtoList.add(userInfoDto);
 
-        when(userService.getAllUsers()).thenReturn(userInfoDtoList);
+        when(userService.getUsers(null, null, null, null)).thenReturn(userInfoDtoList);
 
-        List<UserInfoDto> result = userController.getAllUsers();
+        List<UserInfoDto> result = userController.getUsers(null, null, null, null);
 
         Assertions.assertEquals(userInfoDtoList, result);
-        verify(userService).getAllUsers();
+        verify(userService).getUsers(null, null, null, null);
     }
 
     @Test

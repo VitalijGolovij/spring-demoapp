@@ -20,12 +20,6 @@ public class UserServiceImpl implements UserService {
     private final DtoConvertor dtoConvertor;
 
     @Override
-    public List<UserInfoDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(dtoConvertor::fromUserToUserInfoDto).toList();
-    }
-
-    @Override
     public User getUser(Long id){
         Optional<User> user = userRepository.findById(id);
 
@@ -33,5 +27,11 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(id);
 
         return user.get();
+    }
+
+    @Override
+    public List<UserInfoDto> getUsers(String username, String firstName, String lastName, String city) {
+        List<User> users = userRepository.findUsers(username, firstName, lastName ,city);
+        return users.stream().map(dtoConvertor::fromUserToUserInfoDto).toList();
     }
 }
